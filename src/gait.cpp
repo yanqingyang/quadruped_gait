@@ -37,18 +37,18 @@ bool Gait::init(void)
 	//middle_points[3].y = 60.0/1000;
 	//middle_points[3].z = -90.0/1000;
 
-	middle_points[0].x = -80.0/800;
-	middle_points[0].y = 80.0/800;
-	middle_points[0].z = -90.0/800;
-	middle_points[1].x = -80.0/800;
-	middle_points[1].y = -80.0/800;
-	middle_points[1].z = -90.0/800;
-	middle_points[2].x = 80.0/800;
-	middle_points[2].y = -80.0/800;
-	middle_points[2].z = -90.0/800;
-	middle_points[3].x = 80.0/800;
-	middle_points[3].y = 80.0/800;
-	middle_points[3].z = -90.0/800;
+	middle_points[0].x = -100.0/1000;
+	middle_points[0].y = 100.0/1000;
+	middle_points[0].z = -130.0/1000;
+	middle_points[1].x = -100.0/1000;
+	middle_points[1].y = -100.0/1000;
+	middle_points[1].z = -130.0/1000;
+	middle_points[2].x = 100.0/1000;
+	middle_points[2].y = -100.0/1000;
+	middle_points[2].z = -130.0/1000;
+	middle_points[3].x = 100.0/1000;
+	middle_points[3].y = 100.0/1000;
+	middle_points[3].z = -130.0/1000;
 
 
 	//while (leg_trajectory_point_pub[i].getNumSubscribers() == 0 || leg_trajectory_command_pub[i].getNumSubscribers() == 0);
@@ -189,7 +189,7 @@ void Gait::ConvertBodyTrajToLegTraj(size_t leg_i, std::vector<std::vector<geomet
 
 void Gait::GenerateCrawlGait(double body_speed, double freq, const std::vector<geometry_msgs::Point>& body_traj)
 {
-	const double p_update = 0.05;
+	const double p_update = 1.0/20.0;
 	const double duty_ratio = 0.75;
 
 	const double total_period_num = 10;
@@ -230,9 +230,9 @@ void Gait::GenerateCrawlGait(double body_speed, double freq, const std::vector<g
 		arrow.points.clear();
 		arrow.points.push_back(divided_body_traj[i]);
 		arrow.points.push_back(divided_body_traj[i+1]);
-		marker_pub.publish(arrow);
-		std::cout << "published " << i << " / " << divided_body_traj.size() << std::endl;
-		ros::Duration(0.01).sleep();
+		//marker_pub.publish(arrow);
+		//std::cout << "published " << i << " / " << divided_body_traj.size() << std::endl;
+		//ros::Duration(0.01).sleep();
 	}
 
 	std::vector<std::vector<std::vector<geometry_msgs::Point> > > array_of_supporting_leg_traj;
@@ -271,7 +271,7 @@ void Gait::AddBSplineIdlingLegTraj(const std::vector<std::vector<geometry_msgs::
 			end_point = array_of_supporting_leg_traj[i][0];
 			control_point.x = (start_point.x + end_point.x)/2;
 			control_point.y = (start_point.y + end_point.y)/2;
-			control_point.z = (start_point.z + end_point.z)/2 + 50.0/1000.0;
+			control_point.z = (start_point.z + end_point.z)/2 + 20.0/1000.0;
 
 			std::vector<geometry_msgs::Point> spline_array_of_supporting_leg_traj;
 			spline_array_of_supporting_leg_traj.push_back(start_point);
@@ -549,29 +549,17 @@ int main(int argc, char **argv)
 	ros::Duration(1).sleep();
 	gait.Clear();
 	std::vector<geometry_msgs::Point> trajectory;
-	trajectory.resize(5);
+	trajectory.resize(2);
 
 	trajectory[0].x = 0.0;
 	trajectory[0].y = 0.0;
 	trajectory[0].z = 0.0;
 
-	trajectory[1].x = 100.0/1000.0;
-	trajectory[1].y = 200.0/1000.0;
+	trajectory[1].x = 000.0/1000.0;
+	trajectory[1].y = 600.0/1000.0;
 	trajectory[1].z = 0.0/1000.0;
 
-	trajectory[2].x = 200.0/1000.0;
-	trajectory[2].y = 300.0/1000.0;
-	trajectory[2].z = 0.0/1000.0;
-
-	trajectory[3].x = -400.0/1000.0;
-	trajectory[3].y = 100.0/1000.0;
-	trajectory[3].z = 0.0/1000.0;
-
-	trajectory[4].x = 100.0/1000.0;
-	trajectory[4].y = 600.0/1000.0;
-	trajectory[4].z = 0.0/1000.0;
-
-	gait.GenerateCrawlGait(70.0/1000.0, 0, trajectory);
+	gait.GenerateCrawlGait(30.0/1000.0, 0, trajectory);
 	//gait.MoveLegDefault();
 	//gait.AddPoints();
 	gait.RunLegTrajectory();
