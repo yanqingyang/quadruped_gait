@@ -8,6 +8,10 @@ find_package(catkin REQUIRED COMPONENTS
   roscpp
   rospy
   std_msgs
+  trajectory_msgs
+  control_msgs
+  actionlib
+  quadruped_msgs
 )
 
 ## System dependencies are found with CMake's conventions
@@ -128,7 +132,7 @@ include_directories(
 # add_dependencies(quadruped_gait ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 
 ## Declare a C++ executable
-add_executable(quadruped_gait src/gait.cpp)
+add_executable(quadruped_gait src/gait.cpp src/trajectory.cpp)
 
 ## Add cmake target dependencies of the executable
 ## same as for the library above
@@ -186,3 +190,4 @@ target_link_libraries(quadruped_gait
 
 ## Add folders to be run by python nosetests
 # catkin_add_nosetests(test)
+set(CMAKE_CXX_FLAGS "-std=c++11 ${CMAKE_CXX_FLAGS}")
